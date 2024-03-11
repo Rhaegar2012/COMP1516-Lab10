@@ -1,5 +1,6 @@
 # Author Jose Tellez
 import re
+import os
 
 
 def validate_book_order_details(order_num, title, author, isbn, year_pub, quantity, cost_cad):
@@ -17,7 +18,7 @@ def validate_book_order_details(order_num, title, author, isbn, year_pub, quanti
     try:
         order_num_test = int(order_num)
         title_regex = r"([A-Za-z ]){1,}.*"
-        author_regex = r"([A-Za-z ]){1,}.*"
+        author_regex = r"([A-Za-z' ]){1,}.*"
         ISBN_regex = r"^[0-9]{4,20}$"
         year_regex = r"^[0-9]{4}$"
         cost_regex = r"^[0-9]{1,}\.[0-9]{2}$"
@@ -58,8 +59,46 @@ def validate_book_order_details(order_num, title, author, isbn, year_pub, quanti
 
 
 def calculate_per_book_cost_cad(cost_cad, quantity):
-    pass
+    """
+    Calculates the price per book , given whole purchase price and quantity
+    :param cost_cad: whole cost as float
+    :param quantity: purchase quantity as integer
+    :return: cost per book in the order as float
+    """
+    try:
+        cost_per_book = float(cost_cad/quantity)
+        return cost_per_book
+    except ValueError:
+        print("Review cost, quantity")
+    finally:
+        return None
 
 
 def write_book_order_details(filename, title, author, isbn, year_pub, quantity, cost_cad, unit_cost_cad):
-    pass
+    """
+    Creates a new file and writes book purchase information to it
+    :param filename: filename as string
+    :param title: book title as string
+    :param author: author title as string
+    :param isbn: book ISBN as int
+    :param year_pub: publication year as int
+    :param quantity: quantity as int
+    :param cost_cad:cost as float
+    :param unit_cost_cad:book unit cost as float
+    :return:None
+    """
+    if os.path.exists(filename):
+        raise ValueError("Order file name already exists!")
+    else:
+        file = open(filename, "w")
+        file.write("BOOK ORDER\n")
+        file.write(f"title={title}\n")
+        file.write(f"author={author}\n")
+        file.write(f"isbn={isbn}\n")
+        file.write(f"year_pub={year_pub}\n")
+        file.write(f"quantity={quantity}\n")
+        file.write(f"cost_cad={cost_cad}\n")
+        file.write(f"unit_cost={unit_cost_cad}\n")
+        file.close()
+
+
