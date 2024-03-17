@@ -15,47 +15,57 @@ def validate_book_order_details(order_num, title, author, isbn, year_pub, quanti
     :param cost_cad: Must be a floating point value with exactly 2 decimal places
     :return:
     """
+    order_num_regex = r"^[0-9]{1,4}$"
+    title_regex = r"^[a-zA-Z\s]+$"
+    author_regex = r"^[A-Za-z' ]*$"
+    ISBN_regex = r"^[0-9]{4,20}$"
+    year_regex = r"^[0-9]{4}$"
+    cost_regex = r"^[0-9]{1,}\.[0-9]{2}$"
+
+    # Check order number
     try:
-        order_num_test = int(order_num)
-        title_regex = r"([A-Za-z ]){1,}.*"
-        author_regex = r"([A-Za-z' ]){1,}.*"
-        ISBN_regex = r"^[0-9]{4,20}$"
-        year_regex = r"^[0-9]{4}$"
-        cost_regex = r"^[0-9]{1,}\.[0-9]{2}$"
-
-        # Check order number
-        if order_num_test < 0 or order_num_test > 9999:
-            raise ValueError("Order Number is invalid")
-        # Check title
-        if not re.match(title_regex, title):
-            raise ValueError("Title is invalid")
-        # Check author
-        if not re.match(author_regex, author):
-            raise ValueError("Author is invalid")
-        # Check ISBN
-        if not isinstance(isbn, int):
-            raise TypeError("ISBN must be an integer")
-        elif not re.match(ISBN_regex,isbn):
-            raise ValueError("ISBN is invalid")
-        # Check Year of publication
-        if not isinstance(year_pub, int):
-            raise TypeError("Year must be an integer")
-        elif not re.match(year_regex, year_pub):
-            raise ValueError("Year is invalid")
-        # Check quantity
-        if not isinstance(quantity,int):
-            raise TypeError("Quantity must be an integer")
-        elif quantity < 0 or quantity > 1000:
-            raise ValueError("Quantity is invalid")
-        # Check price
-        if not re.match(cost_regex,str(cost_cad)):
-            raise ValueError("Cost is invalid")
-
+        order_test = int(order_num)
     except ValueError:
-        print("Input should be numbers")
+        print("Order Number is invalid")
+    if not re.match(order_num_regex, str(order_num)):
+        raise ValueError("Order Number is invalid")
+    if int(order_num) < 0 or int(order_num) > 9999:
+        raise ValueError("Order Number is invalid")
+    # Check title
+    if not re.match(title_regex, title):
+        raise ValueError("Title is invalid")
+    # Check author
+    if not re.match(author_regex, author):
+        raise ValueError("Author is invalid")
+    # Check ISBN
+    try:
+        isbn_test = int(isbn)
+    except ValueError:
+        raise TypeError("ISBN must be an integer")
+    if not re.match(ISBN_regex, str(isbn)):
+        raise ValueError("ISBN is invalid")
 
-    finally:
-        return None
+    # Check Year of publication
+    try:
+        year_test = int(year_pub)
+    except ValueError:
+        raise TypeError("Year must be an integer")
+    if not re.match(year_regex, str(year_pub)):
+        raise ValueError("Year is invalid")
+    # Check quantity
+    try:
+        quantity_test = int(quantity)
+    except ValueError:
+       raise TypeError("Quantity must be an integer")
+    if int(quantity) < 0 or int(quantity) > 1000:
+        raise ValueError("Quantity is invalid")
+    # Check price
+    try:
+        cost_cad_test = float(cost_cad)
+    except ValueError:
+        print("Cost is invalid")
+    if not re.match(cost_regex, str(cost_cad)):
+        raise ValueError("Cost is invalid")
 
 
 def calculate_per_book_cost_cad(cost_cad, quantity):
@@ -65,13 +75,12 @@ def calculate_per_book_cost_cad(cost_cad, quantity):
     :param quantity: purchase quantity as integer
     :return: cost per book in the order as float
     """
+    cost_per_book = None
     try:
         cost_per_book = float(cost_cad/quantity)
         return cost_per_book
     except ValueError:
-        print("Review cost, quantity")
-    finally:
-        return None
+        raise ZeroDivisionError("float division by zero")
 
 
 def write_book_order_details(filename, title, author, isbn, year_pub, quantity, cost_cad, unit_cost_cad):
