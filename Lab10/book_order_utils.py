@@ -24,7 +24,7 @@ def validate_book_order_details(order_num, title, author, isbn, year_pub, quanti
 
     # Check order number
     try:
-        order_test = int(order_num)
+        int(order_num)
     except ValueError:
         print("Order Number is invalid")
     if not re.match(order_num_regex, str(order_num)):
@@ -39,7 +39,7 @@ def validate_book_order_details(order_num, title, author, isbn, year_pub, quanti
         raise ValueError("Author is invalid")
     # Check ISBN
     try:
-        isbn_test = int(isbn)
+        int(isbn)
     except ValueError:
         raise TypeError("ISBN must be an integer")
     if not re.match(ISBN_regex, str(isbn)):
@@ -47,21 +47,21 @@ def validate_book_order_details(order_num, title, author, isbn, year_pub, quanti
 
     # Check Year of publication
     try:
-        year_test = int(year_pub)
+        int(year_pub)
     except ValueError:
         raise TypeError("Year must be an integer")
     if not re.match(year_regex, str(year_pub)):
         raise ValueError("Year is invalid")
     # Check quantity
     try:
-        quantity_test = int(quantity)
+        int(quantity)
     except ValueError:
-       raise TypeError("Quantity must be an integer")
+        raise TypeError("Quantity must be an integer")
     if int(quantity) < 0 or int(quantity) > 1000:
         raise ValueError("Quantity is invalid")
     # Check price
     try:
-        cost_cad_test = float(cost_cad)
+        float(cost_cad)
     except ValueError:
         print("Cost is invalid")
     if not re.match(cost_regex, str(cost_cad)):
@@ -75,7 +75,7 @@ def calculate_per_book_cost_cad(cost_cad, quantity):
     :param quantity: purchase quantity as integer
     :return: cost per book in the order as float
     """
-    cost_per_book = None
+
     try:
         cost_per_book = float(cost_cad/quantity)
         return cost_per_book
@@ -109,5 +109,4 @@ def write_book_order_details(filename, title, author, isbn, year_pub, quantity, 
         file.write(f"cost_cad={cost_cad}\n")
         file.write(f"unit_cost={unit_cost_cad}\n")
         file.close()
-
 
